@@ -1,0 +1,96 @@
+Feature (syllable) stress(*unstressed, stressed)
+Feature type(*vowel, consonant)
+
+# Consonant Features
+Feature voicing(voiceless, voiced)
+Feature place(labial, dentoalveolar, palatal, velar, uvular)
+Feature manner(stop, fricative, nasal, approximant, flap)
+Feature approximant(lateral, semivowel)
+
+# Vowel features
+Feature closeness(close, mid, open)
+Feature frontness(front, central, back)
+
+Diacritic ' (before) [stressed]
+
+Symbol i [close front]
+Symbol u [close back]
+Symbol e [mid front]
+Symbol o [mid back]
+Symbol a [open central]
+Symbol ɐ [mid central]
+Symbol ɛ [open front]
+Symbol ɔ [open back]
+
+# Consonants
+Symbol m [voiced labial nasal consonant]
+Symbol n [voiced dentoalveolar nasal consonant]
+Symbol p [voiceless labial stop consonant]
+Symbol t [voiceless dentoalveolar stop consonant]
+Symbol k [voiceless velar stop consonant]
+Symbol c [voiceless palatal stop consonant]
+Symbol b [voiced labial stop consonant]
+Symbol d [voiced dentoalveolar stop consonant]
+Symbol ɡ [voiced velar stop consonant]
+Symbol f [voiceless labial fricative consonant]
+Symbol s [voiceless dentoalveolar fricative consonant]
+Symbol ʃ [voiceless palatal fricative consonant]
+Symbol v [voiced labial fricative consonant]
+Symbol z [voiced dentoalveolar fricative consonant]
+Symbol ʒ [voiced palatal fricative consonant]
+Symbol j [palatal semivowel approximant consonant]
+Symbol ɸ []
+
+############ PROTO LANGUAGE ########
+
+Class protoConsonant {p, t, k}
+Class protoVowel {a, i, u}
+
+Syllables:
+   @protoConsonant? @protoVowel
+
+############# PHASE 1 ##############
+
+Syllables:
+   explicit
+
+stress-lenition:
+    {p, t, k}&[unstressed] => {ɸ, p, c} / $ _
+
+voicing:
+    {p, t, k}&[stressed] => {b, d, g} / @protoVowel _ @protoVowel
+
+stress-shift:
+    {i, u}&[stressed] => {e, o}
+    Then:
+    [stressed] => [unstressed] / $ _
+    [unstressed] => [stressed] / _ $
+
+c-to-tj:
+    c => t j / _ {!i}
+
+Romanizer-phase1:
+   unchanged
+
+############# PHASE 2 ##############
+
+Syllables:
+   explicit
+
+vowel-harmony [vowel]:
+    [open] => [open front] / [front] _
+    [open] => [open back] / [back] _
+
+open-before-stops:
+   [stop]&[stressed] => [unstressed] / [mid] _ 
+   [mid] => [open stressed] / _ [stop]
+
+tj-to-hiatus:
+    t j => t i . / _ [open]
+
+close-when-unstressed:
+    [open]&[unstressed] => [mid]
+    [mid]&[unstressed] => [close]
+
+palatal-to-sibilant-when-unstressed:
+    {c}&[unstressed] => {ʃ}
