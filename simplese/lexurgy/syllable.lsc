@@ -3,12 +3,12 @@ Feature type(*vowel, consonant)
 
 # Consonant Features
 Feature voicing(voiceless, voiced)
-Feature place(labial, dentoalveolar, palatal, velar, uvular)
+Feature place(bilabial, labial, dentoalveolar, palatal, velar, uvular)
 Feature manner(stop, fricative, nasal, approximant, flap)
 Feature approximant(lateral, semivowel)
 
 # Vowel features
-Feature closeness(close, mid, open)
+Feature closeness(close, mid, nearopen, open)
 Feature frontness(front, central, back)
 
 Diacritic ' (before) [stressed]
@@ -18,9 +18,10 @@ Symbol u [close back]
 Symbol e [mid front]
 Symbol o [mid back]
 Symbol a [open central]
-Symbol ɐ [mid central]
+Symbol ɐ [nearopen central]
 Symbol ɛ [open front]
 Symbol ɔ [open back]
+Symbol ə [mid central]
 
 # Consonants
 Symbol m [voiced labial nasal consonant]
@@ -39,7 +40,7 @@ Symbol v [voiced labial fricative consonant]
 Symbol z [voiced dentoalveolar fricative consonant]
 Symbol ʒ [voiced palatal fricative consonant]
 Symbol j [palatal semivowel approximant consonant]
-Symbol ɸ []
+Symbol ɸ [voiceless bilabial fricative consonant]
 
 ############ PROTO LANGUAGE ########
 
@@ -62,9 +63,8 @@ voicing:
 
 stress-shift:
     {i, u}&[stressed] => {e, o}
-    Then:
-    [stressed] => [unstressed] / $ _
-    [unstressed] => [stressed] / _ $
+    [stressed] [unstressed] => [unstressed] [stressed] / _ $
+
 
 c-to-tj:
     c => t j / _ {!i}
@@ -83,14 +83,56 @@ vowel-harmony [vowel]:
 
 open-before-stops:
    [stop]&[stressed] => [unstressed] / [mid] _ 
+   Then:
    [mid] => [open stressed] / _ [stop]
 
 tj-to-hiatus:
-    t j => t i . / _ [open]
+    t j => t i / _ [open]
 
 close-when-unstressed:
-    [open]&[unstressed] => [mid]
-    [mid]&[unstressed] => [close]
+    [open !central]&[unstressed] => [mid]
+    Then:
+    [mid !central]&[unstressed] => [close]
 
 palatal-to-sibilant-when-unstressed:
-    {c}&[unstressed] => {ʃ}
+    {c}&[unstressed] => {j}
+
+bilabial-to-dental-labial:
+    ɸ => f
+
+schwa-insertion:
+    t j => t ə ʔ . j
+
+Romanizer-phase2:
+   unchanged
+
+############# PHASE 3 ##############
+
+Syllables:
+   explicit
+
+schwa-harmony:
+     ə => e / _ []+ [front]&[stressed]
+     ə => o / _ []+ [back]&[stressed]
+     ə => ɐ / _ []+ [open]&[stressed]
+     ə => i / _ []+ [close]&[stressed]
+
+j-sibilation:
+     j => ʒ
+
+losing-final-schwa:
+     ə => * / _ $
+
+rhoticization-on-stressed:
+     k&[stressed] => x
+
+voicing-dental:
+     t&[unstressed] i [vowel] => d ʒ [vowel]
+
+nasalization:
+     {d, b} => {n, m} / ɐ _ a
+     {t, p}&[unstressed] => {n, m} / _ {ɐ, a}
+
+Romanizer-phase3:
+   unchanged
+

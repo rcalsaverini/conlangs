@@ -1,9 +1,21 @@
 from itertools import product
 
-consonants = ["p", "t", "k"]
-vowels = ["a", "i", "u"]
+hard_consonants = ["p", "t", "k"]
+soft_consonants = ["m", "s"]
+liquids = ["w", "l"]
+front_vowels = ["a", "i"]
+back_vowels = ["u"]
+vowels = front_vowels + back_vowels
+consonants = hard_consonants + liquids
 
-syllables = [c + v for c in consonants for v in vowels]
+cv_syllables = [c + v for c in consonants for v in vowels]
+clv_syllables = [
+    c + l + v for c in hard_consonants for l in liquids for v in front_vowels
+]
+cvs_syllables = [
+    c + v + s for c in hard_consonants for v in front_vowels for s in soft_consonants
+]
+syllables = cv_syllables  # + clv_syllables + cvs_syllables
 stressed_syllables = ["'" + s for s in syllables]
 
 # monosyllables = ["'" + s for s in all_syllables]
@@ -13,14 +25,9 @@ stressed_syllables = ["'" + s for s in syllables]
 
 
 def generate_words(n_syllables):
-    for stress in range(n_syllables):
-        syllable_set = (
-            [syllables] * stress
-            + [stressed_syllables]
-            + [syllables] * (n_syllables - stress - 1)
-        )
-        for word in product(*syllable_set):
-            yield ".".join(word)
+    syllable_set = [syllables] * (n_syllables - 1) + [stressed_syllables]
+    for word in product(*syllable_set):
+        yield ".".join(word)
 
 
 # words = monosyllables + disyllables
