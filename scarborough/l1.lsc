@@ -1,0 +1,165 @@
+Feature high, mid, low
+Feature frontness(front, central, back)
+Feature rounded
+Feature near
+Feature consonantness(vowel, consonant)
+Feature voicing(unvoiced, voiced)
+Feature place(labial, dental, alveolar, postalveolar, palatal, velar, glottal)
+Feature manner(stop, fricative, nasal, approximant, affricate)
+Feature lateral
+Feature +long
+Feature +stress
+
+Diacritic ː [+long]
+Diacritic ˈ (floating) [+stress]
+
+Symbol i [vowel +high -mid -low front]
+Symbol ɪ [vowel +high -mid -low front +near]
+Symbol e [vowel -high +mid -low front]
+Symbol ɛ [vowel -high +mid +low front]
+Symbol æ [vowel -high -mid +low front +near]
+Symbol a [vowel -high -mid +low front]
+
+Symbol ə [vowel -high +mid -low central]
+Symbol ɜ [vowel -high +mid +low central]
+
+Symbol u [vowel +high -mid -low back]
+Symbol ʊ [vowel +high -mid -low back +near]
+Symbol o [vowel -high +mid -low back]
+Symbol ɔ [vowel -high +mid +low back]
+Symbol ʌ [vowel -high +mid -low back +rounded]
+Symbol ɑ [vowel -high -mid +low back]
+
+Symbol dʒ [consonant voiced postalveolar affricate]
+Symbol tʃ [consonant unvoiced postalveolar affricate]
+Symbol ʒ [consonant voiced postalveolar fricative]
+Symbol ʃ [consonant unvoiced postalveolar fricative]
+Symbol p [consonant unvoiced labial stop]
+Symbol b [consonant voiced labial stop]
+Symbol t [consonant unvoiced dental stop]
+Symbol d [consonant voiced dental stop]
+Symbol k [consonant unvoiced velar stop]
+Symbol ɡ [consonant voiced velar stop]
+Symbol f [consonant unvoiced labial fricative]
+Symbol v [consonant voiced labial fricative]
+Symbol ð [consonant voiced dental fricative]
+Symbol θ [consonant unvoiced dental fricative]
+Symbol s [consonant unvoiced alveolar fricative]
+Symbol z [consonant voiced alveolar fricative]
+Symbol x [consonant unvoiced velar fricative]
+Symbol ɣ [consonant voiced velar fricative]
+Symbol h [consonant unvoiced glottal fricative]
+Symbol m [consonant voiced labial nasal]
+Symbol n [consonant voiced alveolar nasal]
+Symbol ŋ [consonant voiced velar nasal]
+Symbol l [consonant voiced alveolar approximant +lateral]
+Symbol ʟ [consonant voiced alveolar approximant +lateral]
+Symbol w [consonant voiced velar approximant]
+Symbol ɹ [consonant voiced alveolar approximant]
+Symbol j [consonant voiced palatal approximant]
+
+Class vowel {e, ɪ, i, ʊ, u, ɛ, eɪ, ə, ɜ, oʊ, æ, ʌ, ɑ, ɔ, aɪ, ɔɪ, aʊ}
+Class consonant {ɹ, p, b, t, d, k, g, f, v, s, z, θ, ð, ʃ, ʒ, ʈʃ, dʒ, h, w, n, m, r, j, ŋ, l}
+
+
+schelding: 
+    sk => ʃ / _ @vowel
+
+loss-of-diphtongs-1:
+    [vowel] => * / [vowel back] _
+    [vowel] => * / _ [vowel front]
+
+
+loss-of-diphtongs-2:
+ @vowel => * / @vowel _ {@consonant, $} 
+
+loss-of-diphtongs-3: 
+ {aʊ, oʊ} => ɔ
+ {aɪ, ɔɪ} => ɛ 
+ eɪ => i
+ ə => * / e _
+
+loss-of-ae:
+ æ => eɪ
+
+intervocalic-voicing:
+ {p, t, k, s} => {b, d, g, z} / @vowel _ @vowel
+
+softening: 
+ ŋ => n / _ $
+
+opening: 
+ o => a / _ $
+
+vocalixation: 
+ * => ə / @vowel {ɹ, m, n, s, z, v} _ $
+
+harmony:
+ ə =>  a / a @consonant _
+ ə =>  e / e @consonant _ 
+ ə =>  i / i @consonant _
+ ə =>  o / o @consonant _ 
+ ə =>  u / u @consonant _
+ ə =>  ɑ / ɑ @consonant _ 
+ ə =>  ʊ / ʊ @consonant _
+ ə =>  ɪ / ɪ @consonant _ 
+ ə =>  ɛ / ɛ @consonant _
+ ə =>  eɪ / eɪ @consonant _
+ ə =>  ɜ / ɜ @consonant _
+ ə =>  ʌ / ʌ @consonant _
+ ə =>  ɔ / ɔ @consonant _
+
+final-schwa-loss:
+ əɹə => ɑɹ / _ $
+
+
+stress-test-2:
+   {ɔ, ɛ} => ə / _  @consonant ɛ
+
+rtod:
+  ɹ => r / @vowel _ @vowel
+
+undental:
+  ð => v
+  θ => f
+  r => d / @vowel _ {@vowel, $}
+  r => w / @consonant _ {@vowel, $}
+ 
+unb: 
+ b => * / m _ 
+
+unasal: 
+  {m, n} => {b, d} / @vowel _ @vowel
+
+ju:
+ j => ʒ / _ @vowel
+ dʒ => ʒ
+
+undo: 
+ b => p / b @vowel _
+ b => b / _ @vowel b
+
+long:
+ ː => ə / @vowel _ $
+
+jie:
+ i => j / _ @vowel
+
+sho:
+ ʃj => ʒ
+
+
+adhfa: 
+ ə => a /  {ɛ, ɜ, ɑ, ɔ, a} @consonant _
+ ə => i / @vowel @consonant _
+ uə => e
+
+
+gomada: 
+ lj => ʎ
+ r => r a / _ s
+ v => w / _ @consonant
+ v => f / _ @vowel // @vowel _ @vowel
+
+ h => hw / $ _
+

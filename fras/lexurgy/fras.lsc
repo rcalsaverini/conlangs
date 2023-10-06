@@ -1,0 +1,189 @@
+Feature type(*vowel, consonant)
+
+# Consonant Features
+Feature voicing(voiceless, voiced)
+Feature place(labial, dentoalveolar, palatal, velar, uvular)
+Feature manner(stop, fricative, nasal, approximant, flap)
+Feature approximant(lateral, semivowel)
+Feature +labialized, +rhotic
+
+# Vowel features
+Feature closeness(close, mid, open)
+Feature frontness(front, central, back)
+Feature +nasalized
+Feature stress
+Feature grave
+Feature length(*short, long)
+
+# Syllable features
+
+# Diacritics
+Diacritic ʷ [+labialized]
+Diacritic ̃  (floating) [+nasalized +stress]
+Diacritic ˈ (floating) [+stress]
+Diacritic ` (floating) [+stress +grave long]
+Diacritic ˞ [+rhotic]
+Diacritic ː [+stress long]
+
+# Consonants
+Symbol m [voiced labial nasal consonant]
+Symbol n [voiced dentoalveolar nasal consonant]
+Symbol n̥ [voiceless dentoalveolar nasal consonant]
+Symbol ŋ [voiced velar nasal consonant]
+Symbol ɲ [voiced palatal nasal consonant]
+Symbol p [voiceless labial stop consonant]
+Symbol t [voiceless dentoalveolar stop consonant]
+Symbol k [voiceless velar stop consonant]
+Symbol c [voiceless palatal stop consonant]
+Symbol ɟ [voiced palatal stop consonant]
+Symbol b [voiced labial stop consonant]
+Symbol d [voiced dentoalveolar stop consonant]
+Symbol ɡ [voiced velar stop consonant]
+Symbol f [voiceless labial fricative consonant]
+Symbol s [voiceless dentoalveolar fricative consonant]
+Symbol ʃ [voiceless palatal fricative consonant]
+Symbol v [voiced labial fricative consonant]
+Symbol z [voiced dentoalveolar fricative consonant]
+Symbol ʒ [voiced palatal fricative consonant]
+Symbol j [palatal semivowel approximant consonant]
+Symbol w [velar semivowel +labialized consonant]
+Symbol l [dentoalveolar lateral approximant consonant]
+Symbol ʎ [palatal lateral approximant consonant]
+Symbol ɾ [dentoalveolar flap consonant +rhotic]
+Symbol ʁ [voiced uvular fricative consonant]
+Symbol x [voiceless velar fricative consonant]
+Symbol ɣ [voiced velar fricative consonant]
+Symbol χ [voiceless uvular fricative consonant]
+Symbol ɢ [voiced uvular stop consonant]
+Symbol ɴ [voiced uvular nasal consonant]
+
+# Vowels
+Symbol i [close front]
+Symbol ɨ [close central]
+Symbol u [close back]
+Symbol e [mid front]
+Symbol o [mid back]
+Symbol ɛ [open front]
+Symbol ɐ [mid central]
+Symbol ɔ [open back]
+Symbol a [open central]
+
+simple-deromanization:
+ n h => ɲ
+ {x, s} => z / [vowel] _ [open vowel]
+ {c h, x} => ʃ
+ l h => ʎ
+ j => ʒ
+ g => ʒ / _ {ê, é, e, i}
+ c => s / _ {ê, é, e, i}
+ c => k / _ {a, o, u}
+ {ss, ç} => s 
+ e => i / [] _ $
+ o => u / [] _ $
+ ã => ɐ̃
+ {é, ó} => {ɛ, ɔ}
+ \- => *
+ 
+rhotic-deromanization:
+ rr => ʁ 
+ r => ʁ / {$ _,  _ [consonant]}
+ Else:
+ r => ɾ
+
+combined-deromanization:
+ q u => kʷ / _ [open vowel]
+ q u => k / _ [close vowel]
+ q u => k / _ [mid vowel]
+ {t, d} => {tʃ, dʒ} / _ {e, i, ɨ} $
+
+nasal-deromanization:
+ [vowel] [nasal consonant] => [+nasalized +stress] * / _ {$, [consonant]}
+
+vowel-harmony [vowel]:
+ [central] => [front] / [front] _
+ [central] => [back] / [back] _
+ [central] => [front] / [front] [] _
+ [central] => [back] / [back] [] _
+
+
+trestop:
+ [velar] => [palatal] / $ _ 
+ [dentoalveolar -rhotic] => [palatal] / _ {[vowel] $, [vowel] s $} 
+ [+rhotic] => ʔ / [vowel] _ [vowel]
+ [vowel]$1 [vowel]$2 => $1 *
+ [velar] [close] => [+labialized] [open]
+
+nasal-assimilation:
+ [nasal] => [$place] / _ [] [consonant $place]
+
+word-final-devoicing:
+ [voiced !nasal] => [voiceless] /  _ $
+ [voiced !nasal] => [voiceless] /  _ [] $
+
+
+lh-to-ly:
+ ʎ => l y
+
+y-loss:
+ y [front] => i *
+
+v-loss:
+ v => w / $ _
+
+final-s-loss:
+ {s, ɾ} => h / _ $
+
+final-front-vowel-to-schwa: 
+ [front] h => ə * / _ $
+ [front] => ə / _ $
+
+vvf:
+ ʔ => x
+ h => * / [] _ $
+
+telepelele:
+ [stop voiced] => [nasal] / a _ a
+ [stop voiceless] => [fricative] / a _ a
+ [palatal] => [velar]
+
+unful:  
+ ɣ => g
+ [+nasalized] => [-nasalized]
+ x [vowel]$1 => $1 ʁ / [stop] _
+
+unasaal:
+ [nasal] => [fricative]
+
+unasaal2:
+ ɣ => g
+
+unasaal3:
+ [stop voiced] => [fricative voiceless]
+ g => d
+
+urgonizatiio:
+ [fricative] => [stop] / [$frontness] _ [$frontness]
+
+non-stops:
+ [stop] => [nasal -rhotic] / _ [stop]
+
+voice-all-nasals:
+ [nasal voiceless] => [voiced]
+
+lose-final-schwa:
+ ə => * / [] _ $
+
+final-rhotic-invertion:
+ [stop]$1 ɾ => ɾ $1 / _ $
+ y => i
+
+romanization:
+ ɲ => n h
+ ʃ => c h
+ ʒ => j
+ {ʁ, ɾ} => r
+ {ɛ, ɔ} => {é, ó}
+ ɨ => i
+ ʎ => l h
+ ʔ => '
+ x => rr

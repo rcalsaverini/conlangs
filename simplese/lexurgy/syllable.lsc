@@ -1,0 +1,141 @@
+Feature (syllable) stress(*unstressed, stressed)
+Feature type(*vowel, consonant)
+
+# Consonant Features
+Feature voicing(voiceless, voiced)
+Feature place(bilabial, labial, dentoalveolar, palatal, velar, uvular)
+Feature manner(stop, fricative, nasal, approximant, flap)
+Feature approximant(lateral, semivowel)
+
+# Vowel features
+Feature closeness(close, mid, nearopen, open)
+Feature frontness(front, central, back)
+
+Diacritic ' (before) [stressed]
+
+Symbol i [close front]
+Symbol u [close back]
+Symbol e [mid front]
+Symbol o [mid back]
+Symbol a [open central]
+Symbol ɐ [nearopen central]
+Symbol ɛ [open front]
+Symbol ɔ [open back]
+Symbol ə [mid central]
+
+# Consonants
+Symbol m [voiced labial nasal consonant]
+Symbol n [voiced dentoalveolar nasal consonant]
+Symbol p [voiceless labial stop consonant]
+Symbol t [voiceless dentoalveolar stop consonant]
+Symbol k [voiceless velar stop consonant]
+Symbol c [voiceless palatal stop consonant]
+Symbol b [voiced labial stop consonant]
+Symbol d [voiced dentoalveolar stop consonant]
+Symbol ɡ [voiced velar stop consonant]
+Symbol f [voiceless labial fricative consonant]
+Symbol s [voiceless dentoalveolar fricative consonant]
+Symbol ʃ [voiceless palatal fricative consonant]
+Symbol v [voiced labial fricative consonant]
+Symbol z [voiced dentoalveolar fricative consonant]
+Symbol ʒ [voiced palatal fricative consonant]
+Symbol j [palatal semivowel approximant consonant]
+Symbol ɸ [voiceless bilabial fricative consonant]
+Symbol ɾ [dentoalveolar flap]
+
+############ PROTO LANGUAGE ########
+
+Class consonant {m, n, p, t, k, c, b, d, g, f, s, v, z, j, ʃ, ʒ, ɸ, ɾ}
+Class vowel {a, i, u}
+
+Syllables:
+   @consonant? @vowel
+
+############# PHASE 1 ##############
+
+Syllables:
+   explicit
+
+stress-lenition:
+    {p, t, k}&[unstressed] => {ɸ, p, c} / $ _
+
+voicing:
+    {p, t, k}&[stressed] => {b, d, g} / @vowel _ @vowel
+
+stress-shift:
+    {i, u}&[stressed] => {e, o}
+    [stressed] [unstressed] => [unstressed] [stressed] / _ $
+
+stress-rhoticization:
+    l&[stressed] => ɾ
+
+c-to-tj:
+    c => t j / _ {!i}
+
+Romanizer-phase1:
+   unchanged
+
+############# PHASE 2 ##############
+
+Syllables:
+   explicit
+
+vowel-harmony [vowel]:
+    [open] => [open front] / [front] _
+    [open] => [open back] / [back] _
+
+open-before-stops:
+   [stop]&[stressed] => [unstressed] / [mid] _ 
+   Then:
+   [mid] => [open stressed] / _ [stop]
+
+tj-to-hiatus:
+    t j => t i / _ [open]
+
+close-when-unstressed:
+    [open !central]&[unstressed] => [mid]
+    Then:
+    [mid !central]&[unstressed] => [close]
+
+palatal-to-sibilant-when-unstressed:
+    {c}&[unstressed] => {j}
+
+bilabial-to-dental-labial:
+    ɸ => f
+
+schwa-insertion:
+    t j => t ə ʔ . j
+
+Romanizer-phase2:
+   unchanged
+
+############# PHASE 3 ##############
+
+Syllables:
+   explicit
+
+schwa-harmony:
+     ə => e / _ []+ [front]&[stressed]
+     ə => o / _ []+ [back]&[stressed]
+     ə => ɐ / _ []+ [open]&[stressed]
+     ə => i / _ []+ [close]&[stressed]
+
+j-sibilation:
+     j => ʒ
+
+losing-final-schwa:
+     ə => * / _ $
+
+rhoticization-on-stressed:
+     k&[stressed] => x
+
+voicing-dental:
+     t&[unstressed] i => d / _ @vowel
+
+nasalization:
+     {d, b} => {n, m} / ɐ _ a
+     {t, p}&[unstressed] => {n, m} / _ {ɐ, a}
+
+Romanizer-phase3:
+   unchanged
+

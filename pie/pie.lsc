@@ -1,0 +1,185 @@
+Feature kind(consonant, vowel)
+Feature (syllable) +stress
+
+#consonants
+Feature place(bilabial, labiodental, dental, alveolar, postalveolar, retroflex, palatal, velar, uvular, pharyngeal, glottal)
+Feature manner(nasal, plosive, fricative, approximant, tap, trill)
+Feature voicedness(voiced, unvoiced)
+Feature +lateral, +sibilant
+
+#vowels
+Feature openess(close, nearclose, closemid, mid, openmid, nearopen, open)
+Feature frontness(front, central, back)
+Feature roundedness(rounded, unrounded)
+
+#diacritics
+Feature +aspirated
+Feature +palatalized
+Feature +nasalized
+Feature +rhoticized
+Feature +labialized
+Feature +accent
+Feature +long
+
+Diacritic ʷ (floating) [+labialized]
+Diacritic ʰ (floating) [+aspirated]
+Diacritic ʲ (floating) [+palatalized]
+Diacritic ̃  (floating) [+nasalized]
+Diacritic ˞ (floating) [+rhoticized]
+Diacritic ́  (floating) [+accent]
+Diacritic ˈ (before) [+stress]
+Diacritic ː (floating) [+long]
+
+Symbol ɑ [open     back    unrounded vowel] 
+Symbol a [open     front   unrounded vowel] 
+Symbol æ [nearopen front   unrounded vowel] 
+Symbol ɔ [openmid  back    rounded   vowel] 
+Symbol ɛ [openmid  front   unrounded vowel] 
+Symbol ə [mid      central unrounded vowel] 
+Symbol o [closemid back    rounded   vowel] 
+Symbol e [closemid front   unrounded vowel] 
+Symbol u [close    back    rounded   vowel] 
+Symbol i [close    front   unrounded vowel] 
+
+Symbol s  [unvoiced alveolar       +sibilant fricative    consonant]
+Symbol s̪  [unvoiced dental         +sibilant fricative    consonant]
+Symbol g  [voiced   velar          plosive                consonant]
+Symbol k  [unvoiced velar          plosive                consonant]
+Symbol b  [voiced   bilabial       plosive                consonant]
+Symbol p  [unvoiced bilabial       plosive                consonant]
+Symbol d  [voiced   alveolar       plosive                consonant]
+Symbol t  [unvoiced alveolar       plosive                consonant]
+Symbol m  [unvoiced bilabial       nasal                  consonant]
+Symbol n  [unvoiced alveolar       nasal                  consonant]
+Symbol ɹ  [unvoiced postalveolar   approximant            consonant]
+Symbol ɾ  [unvoiced alveolar       tap                    consonant]
+Symbol l  [unvoiced alveolar       +lateral approximant   consonant]
+Symbol r  [unvoiced alveolar       trill                  consonant]
+Symbol y  [unvoiced palatal        approximant            consonant]
+Symbol w  [unvoiced bilabial       approximant            consonant]
+Symbol x  [unvoiced velar          fricative              consonant]
+Symbol h₃ [unvoiced uvular         fricative              consonant]
+Symbol ʒ  [voiced   postalveolar   fricative              consonant]
+Symbol ʃ  [unvoiced postalveolar   +sibilant fricative    consonant]
+Symbol h₂ [unvoiced pharyngeal     fricative              consonant]
+Symbol h₁ [unvoiced glottal        fricative              consonant]
+Symbol ð  [voiced   dental         fricative              consonant]
+Symbol θ  [unvoiced dental         fricative              consonant]
+Symbol z  [voiced   alveolar       +sibilant fricative    consonant]
+Symbol ɮ  [voiced   dental         +lateral fricative     consonant]
+Symbol ɬ  [unvoiced dental         +lateral fricative     consonant]
+
+Element laryngeal   {h₁, h₂, h₃}
+Element diphthong   {ai, ou, ue, ɑo, ai, ɛi, ui, ie, æi, ua, oe, iea, uiu, oo, oui} 
+Element vowel       {[vowel], @diphthong}
+Element cons        [consonant]
+Class   rhotic      {r, ɹ, ɾ}
+Class   glide       {y, w, i, u}
+Element liquid      {@rhotic, [+lateral approximant]}
+Element syllabic    {@liquid, @glide, @vowel, @laryngeal}
+Element sibilant    {[+sibilant fricative]}
+Element nonsibilant {[-sibilant fricative]}
+
+stress:    
+    {á, é, í, ó, ú} => [+stress]
+
+deaccent:
+    {á, é, í, ó, ú} => {a, e, i, o, u}
+
+Syllables:
+    explicit
+
+deromanized:
+    unchanged
+
+lengthening:
+    @vowel&[-stress] => [+long] / _ @laryngeal
+    @vowel&[-stress] => [+long] / @laryngeal _
+
+loss-of-aspiration:
+    @cons$1&[+aspirated] => $1 h₃
+    Then: @cons&[+aspirated] => [-aspirated]
+
+vowel-rounding:
+    @vowel&[front unrounded] => [back rounded] / _ h₂
+
+vowel-coloring-h2:
+    e => a / _ h₂
+    e => a / h₂ _
+    
+vowel-coloring-h3:
+    e => o / _ h₃
+    e => o / h₃ _
+    u => i / _ h₃
+    u => i / h₃ _
+
+vowel-lengthening:
+    @vowel => [+long] / _ @laryngeal
+    @vowel => [+long] / @laryngeal _
+
+rebalance-stress:
+    <syl>&[-stress] => [+stress] / <syl>*&[-stress] _ $
+
+
+diphthong-formation:
+    e @laryngeal => ai /  !@vowel _ !@vowel
+    o @laryngeal => ou /  !@vowel _ !@vowel
+
+laryngeal-loss:
+    h₁ => e / !$ _ 
+    h₂ => a / !$ _
+    h₃ => o / !$ _
+    h₁ => gʷe / $ _ !@vowel
+    h₂ => gʷa / $ _ !@vowel
+    h₃ => gʷo / $ _ !@vowel
+    @laryngeal => gʷ / $ _
+
+palatalization:
+    @cons => [+palatalized] / _ is
+    @cons => [+palatalized] / _ e
+
+fricativization:
+    {t, d} => {θ, ð} / @vowel _ @vowel
+    @cons&[alveolar +palatalized] => [fricative dental -palatalized]
+        Then: s̪ => θ
+              tθ => θ
+
+long-vowel-rotation-diphthongalization:
+    aː => ɑo
+    eː => ai
+    iː => ɛi
+    oː => ui
+    uː => ie
+
+dangling-plosive-elimination:
+    @cons&[plosive] => * / _ $
+    @cons&[plosive] => * / _ s $
+
+palatalization-trace:
+    @vowel&[close] =>  [front] / @cons&[+palatalized] _
+        Then:
+            @cons&[+palatalized] => [-palatalized]
+
+    @vowel&[nearclose] =>  [close] / @cons&[+palatalized] _
+        Then:
+            @cons&[+palatalized] => [-palatalized]
+
+    @vowel&[closemid] =>  [nearclose] / @cons&[+palatalized] _
+        Then:
+            @cons&[+palatalized] => [-palatalized]
+
+    @vowel&[mid] =>  [closemid] / @cons&[+palatalized] _
+        Then:
+            @cons&[+palatalized] => [-palatalized]
+
+    @vowel&[openmid] =>  [mid] / @cons&[+palatalized] _
+        Then:
+            @cons&[+palatalized] => [-palatalized]
+
+    @vowel&[nearopen] =>  [openmid] / @cons&[+palatalized] _
+        Then:
+            @cons&[+palatalized] => [-palatalized]
+
+    @vowel&[open] =>  [nearopen] / @cons&[+palatalized] _
+        Then:
+            @cons&[+palatalized] => [-palatalized]

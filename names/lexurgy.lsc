@@ -1,0 +1,211 @@
+Feature +long, +nasalized, +labialized
+Feature (syllable) stress(*unstressed, stressed)
+
+Diacritic ː (floating) [+long]
+Diacritic ̃  (floating) [+nasalized]
+Diacritic ʷ (floating) [+labialized]
+Diacritic ˈ (before) [stressed]
+
+Class vowel {ɑ, a, ə, ɛ, e, i, ɔ, o, u}
+Class stop {p, t, k, b, d, g}
+Class sibilant {s, z, ʃ, ʒ}
+Class nonsibilant {f, v}
+Class fricative {@sibilant, @nonsibilant}
+Class liquid {ɾ, l, w, j}
+Class nasal {m, n, ŋ}
+Class cons {@stop, @fricative, @nasal, @liquid}
+
+deromanizer:
+    {é, ó} => {ɛ, ɔ}
+    r => ɾ
+    j => ʒ
+    y => j
+
+Syllables:
+    @cons @vowel @vowel? {@nasal, @liquid, @sibilant}?
+    {@stop, z} {@liquid, @sibilant}? @vowel @vowel? {@nasal, @liquid, @sibilant}?
+    @cons? ɛ l
+
+    @vowel @stop?
+    @vowel @sibilant
+
+stress-1:
+    {ɛ, ɔ, õ, ã} => [stressed]
+    i => [stressed] / {_ @cons? ɑ s? $, {v, ɑ, m} _ $}
+
+stress-2:
+    a => [stressed] / {_ @cons {ɑ, i} $, _ [] $, _ [] u}
+    e&[+labialized] => [stressed]
+
+make-stress:
+    @vowel&[stressed] => [+long]
+
+Romanizer-before-changes:
+    unchanged
+
+Syllables:
+    explicit
+
+syncope:
+    @cons @vowel&[-long unstressed] => * * / $ _ @stop
+
+nasal-assimilation:
+    @nasal => m / _ {p, b, m}
+    @nasal => n / _ {t, d, n}
+    @nasal => ŋ / _ {k, g, w, ŋ}
+
+shorten:
+    {e!, o!} => {ɛ, ɔ}
+    Then:
+    [+long] => [-long]
+
+vowel-rotation:
+    i => e / @stop _
+    e => ɛ / @stop _
+    ɛ => a / @stop _
+    a => ɑ / @stop _
+    ɑ => ɔ / @stop _
+    ɔ => o / @stop _
+    o => u / @stop _
+    u => i / @stop _
+
+reverse-rotation:
+    e => i / @cons&{!@stop} _ !i
+    ɛ => e / @cons&{!@stop} _ !e
+    a => ɛ / @cons&{!@stop} _ !ɛ
+    ɑ => a / @cons&{!@stop} _ !a
+    ɔ => ɑ / @cons&{!@stop} _ !ɑ
+    o => ɔ / @cons&{!@stop} _ !ɔ
+    u => o / @cons&{!@stop} _ !o
+    i => u / @cons&{!@stop} _ !u
+
+devoice:
+    {b, d, g, z, ʒ} => {p, t, k, s, ʃ} / _ {p, t, k}
+
+
+glomination:
+    (@liquid / @cons _)? $$ => *
+
+l-to-d:
+    l => d / _ #
+
+furication:
+    e e => [+long] * 
+    ɛ e => [+long] * 
+    a e => ɛ * 
+    ɑ e => a * 
+    ɔ e => o i 
+    o e => ə
+    u e => ə 
+    i e => j e
+
+    e ɛ => * [+long]
+    ɛ ɛ => [+long] * 
+    a ɛ => [+long] * 
+    ɑ ɛ => * [+long]
+    ɔ ɛ => [+long] * 
+    o ɛ => w ɛ
+    u ɛ => w ɛ
+    i ɛ => j ɛ 
+
+    e a => ɛ *  
+    ɛ a => ɛ *  
+    a a => [+long] *  
+    ɑ a => * [+long] 
+    ɔ a => [+long] *  
+    o a => ə 
+    u a => w a  
+    i a => j a 
+
+    e ɑ => [+long] *  
+    ɛ ɑ => [+long] * 
+    a ɑ => [+long] * 
+    ɑ ɑ => [+long] * 
+    ɔ ɑ => [+long] * 
+    o ɑ => w ɑ
+    u ɑ => w ɑ
+    i ɑ => j ɑ 
+
+    e ɔ => * ɔ 
+    ɛ ɔ => ɛ w
+    a ɔ => [+long] * 
+    ɑ ɔ => * ɔ 
+    ɔ ɔ => [+long] * 
+    o ɔ => * [+long] 
+    u ɔ => w ɔ 
+    i ɔ => j ɔ 
+
+    e o => ə 
+    ɛ o => ɛ w
+    a o => a w 
+    ɑ o => * [+long] 
+    ɔ o => [+long] * 
+    o o => * [+long] 
+    u o => w o 
+    i o => j o 
+
+    e u => e w 
+    ɛ u => ɛ w 
+    a u => a w 
+    ɑ u => ɔ 
+    ɔ u => ɔ w 
+    o u => o w 
+    u u =>  [+long] * 
+    i u => j w 
+
+    e i => e j 
+    ɛ i => ɛ j 
+    a i => a j 
+    ɑ i => ɔ j 
+    ɔ i => ɔ j 
+    o i => o j 
+    u i => u j 
+    i i => [+long] *  
+    Then:
+        . => * / . @cons+ _
+        . => * / _ @cons+ $
+        @stop$1 @fricative$2 * * => $1 $2 ə . / _ w
+        Then:
+            ə => [unstressed]
+            ɑ&[stressed] => a
+            a&[unstressed] => ɑ
+w-voicing:
+    w => v / {z, b, d, g, n, m, ɾ} _
+    Then: 
+         * * => ə . / {@stop, @fricative} ɾ _ @cons&{!@liquid}
+         . @cons$1 => $1 . / @vowel _ v
+
+devoicing-unstressed:
+    {b, d, g}&[unstressed] => {p, t, k} 
+
+nasal-assimilation-2:
+    @nasal => m / _ {p, b, m}
+    @nasal => n / _ {t, d, n, v, f}
+    @nasal => ŋ / _ {k, g, w, ŋ}
+
+deharmony:
+    ɛ&[unstressed] => i / _ {@vowel, @cons}+ {ɛ, a, ɔ}
+    a&[unstressed] => ɑ / _ {@vowel, @cons}+ {ɛ, a, ɔ}
+    ɔ&[unstressed] => o / _ {@vowel, @cons}+ {ɛ, a, ɔ}
+
+
+consonant-harmony:
+    f => v / _ {@vowel, @cons}+ {b, d, g}
+    d => t / {p, t, k} {@vowel, @cons}+ _
+    {t, d} => ɾ / {@stop, @vowel} _ @vowel
+    Then: 
+        @stop$1 . => . $1 / @vowel _  ɾ
+        v => f / _ {@vowel, @cons}+ {p, t, k}
+
+nasalization:
+    @vowel @nasal => [+nasalized] * / _ @cons? .
+    Then:
+    {a, i, e, u}&[+nasalized] => {ɛ, e, ɔ, o}
+
+vowelization:
+    ə => ɑ / {_ @cons+ a, a @cons+ _}
+    ə => e / {_ @cons+ ɛ, ɛ @cons+ _}
+    ə => o / {_ @cons+ ɔ, ɛ @cons+ _}
+
+Romanizer:
+    unchanged
