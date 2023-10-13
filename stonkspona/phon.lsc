@@ -1,0 +1,123 @@
+Feature kind(consonant, vowel)
+Feature (syllable) +stress
+
+#consonants
+Feature place(bilabial, labiodental, dental, alveolar, postalveolar, retroflex, palatal, velar, uvular, pharyngeal, glottal)
+Feature manner(nasal, plosive, fricative, approximant, tap, trill)
+Feature voicedness(voiced, unvoiced)
+Feature +lateral, +sibilant
+
+#vowels
+Feature openess(close, nearclose, closemid, mid, openmid, nearopen, open)
+Feature frontness(front, central, back)
+Feature roundedness(rounded, unrounded)
+
+#diacritics
+Feature +long
+Feature +nasalized
+
+Diacritic ˈ (before) [+stress]
+Diacritic ː (floating) [+long]
+Diacritic ̃  (floating) [+nasalized]
+
+Symbol a [open     front   unrounded vowel] 
+Symbol ɔ [openmid  back    rounded   vowel] 
+Symbol ɛ [openmid  front   unrounded vowel] 
+Symbol ə [mid      central unrounded vowel] 
+Symbol o [closemid back    rounded   vowel] 
+Symbol e [closemid front   unrounded vowel] 
+Symbol u [close    back    rounded   vowel] 
+Symbol i [close    front   unrounded vowel] 
+
+Symbol m  [unvoiced bilabial       nasal                  consonant]
+Symbol n  [unvoiced alveolar       nasal                  consonant]
+Symbol p  [unvoiced bilabial       plosive                consonant]
+Symbol t  [unvoiced alveolar       plosive                consonant]
+Symbol k  [unvoiced velar          plosive                consonant]
+Symbol s  [unvoiced alveolar       +sibilant fricative    consonant]
+Symbol w  [unvoiced bilabial       approximant            consonant]
+Symbol l  [unvoiced alveolar       +lateral approximant   consonant]
+Symbol j  [unvoiced palatal        approximant            consonant]
+
+Symbol g  [voiced   velar          plosive                consonant]
+Symbol b  [voiced   bilabial       plosive                consonant]
+Symbol d  [voiced   alveolar       plosive                consonant]
+Symbol ɾ  [unvoiced alveolar       tap                    consonant]
+Symbol ɹ  [voiced   alveolar       approximant            consonant]
+
+Symbol ʒ  [voiced   postalveolar   fricative              consonant]
+Symbol z  [voiced   alveolar       +sibilant fricative    consonant]
+
+Element vowel       [vowel]
+Element cons        [consonant]
+Element stop        [plosive]
+Class   rhotic      {ɾ, ɹ}
+Class   glide       {j, w, i, u}
+Element liquid      {@rhotic, [+lateral approximant]}
+Element sibilant    {[+sibilant fricative]}
+Element nonsibilant {[-sibilant fricative]}
+
+Syllables:
+    @cons? @vowel n?
+
+#stress:
+#    <syl>$1 <syl>$2 <syl>$3 => [+stress] $2 $3 / $ <syl>+ _ $
+#    <syl>$1 <syl>$2 => [+stress] $2 / $ _ $
+#    <syl> => [+stress] / $ _ $
+
+vowel-deletion:
+    @vowel&[-stress] => * / {!@stop _ $, _ @vowel, _ @stop}
+    Then: 
+        . => *  / {@vowel _ @cons $, . @cons _ @vowel, @cons _ @cons .}
+        @cons => * / {@cons _ $, $ _ @cons}
+        @stop => *  / _ @stop
+
+Syllables:
+    explicit
+
+central-vowel-fortition:
+    {o, e}&[+stress] => {ɔ, ɛ}
+
+vowel-nasalization:
+    @vowel {m, n} => [+nasalized] * / _ {$, {k, t}}
+
+nasal-assimilation:
+    n => m / _ {p, $}
+
+long-glides:
+    i j => [+long] * 
+    u {w, l} => [+long] *
+    Then:
+        {l, w}&[-stress] => u / _ {@cons, $}
+        j&[-stress] => i / _ {@cons, $}
+
+nasal-lenition:
+    {ã, ẽ, ɛ̃} => ə
+    {ĩ, õ, ũ, ɔ̃} => [-nasalized +long]
+    Then:
+       @vowel&[-stress +long] => [-long]
+       ə => [-stress]
+       Then:
+          <syl> []$1 ə => [+stress] $1 [-stress]
+
+schwa-deletion:
+    []$2 ə&[-stress] => $2 * / <syl> _
+    Then: 
+        . => *  / {@vowel _ @cons $, . @cons _ @vowel, @cons _ @cons .}
+        @cons => * / {@cons _ $, $ _ @cons}
+        @stop => *  / _ @stop
+
+
+demama:
+    m a m a m => m aː m / _ @vowel
+
+rhoticization:
+    i&[-stress] => * / @vowel l _ {p, t, k, s, $}
+    Then:
+       . l => * l / _ {@cons, .}
+       Then: 
+          l => ɾ / @vowel _ {@cons, $}
+
+voicing:
+    {p, t, k} => {b, d, g} / @vowel _ @vowel
+
