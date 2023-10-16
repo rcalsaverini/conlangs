@@ -1,6 +1,6 @@
-LEXURGY := ../bin/lexurgy/bin/lexurgy sc
+LEXURGY := ../../../../../../bin/lexurgy/bin/lexurgy sc
 SOUND_CHANGES := pie.lsc
-WORDS_FILE := words
+WORDS_FILE := words.wli
 
 watch:
 	watchman-make -p '**/{pie.lsc,words}' -t run

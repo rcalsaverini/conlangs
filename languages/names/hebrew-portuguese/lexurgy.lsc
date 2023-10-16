@@ -207,5 +207,15 @@ vowelization:
     ə => e / {_ @cons+ ɛ, ɛ @cons+ _}
     ə => o / {_ @cons+ ɔ, ɛ @cons+ _}
 
+
+Syllables:
+    clear
+
 Romanizer:
-    unchanged
+    {ɛ, ɔ} => {é, ó}
+    ɾ => r
+    ʒ => j
+    j => y
+    @vowel&[+long]$1 * => $1 $1
+    Then:
+        @vowel&[+long] => [-long]
